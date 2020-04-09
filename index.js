@@ -2,4 +2,10 @@
 
 const server = require( "./server.js" );
 
-await	server( );
+(
+	async	function( ){
+				return	(
+							await	server( )
+						);
+			}
+)( );

@@ -7,7 +7,13 @@ SERVICE
 .post(
 	[
 		function executeRequestConnectGame( request, response ){
+			const gameSessionReference = (
+				request
+				.query
+				.gameSessionReference
+			);
 
+			
 		}
 	]
 );

@@ -2,6 +2,7 @@
 
 const childProcess = require( "child_process" );
 const fs = require( "fs" );
+const os = require( "os" );
 const path = require( "path" );
 const util = require( "util" );
 
@@ -20,6 +21,14 @@ const asyncFs = (
 	.promises
 );
 
+const asyncChildProcessExecute = (
+	util
+	.promisify(
+		childProcess
+		.exec
+	)
+);
+
 const proceedCallback = (
 	require( "./utility/proceed-callback.js" )
 );
@@ -32,8 +41,27 @@ const platformPortNumber = (
 	54321
 );
 
+const databaseServerHostAddress = (
+	"localhost"
+);
+
 const databaseServerPortNumber = (
 	4321
+);
+
+const databaseNamespace = (
+	"tic-tac-toe"
+);
+
+const databaseServerURI = (
+	[
+		`mongodb://${ databaseServerHostAddress }`,
+		`:${ databaseServerPortNumber }`,
+		`/${ databaseNamespace }`
+	]
+	.join(
+		""
+	)
 );
 
 const databaseServerLogPath = (
@@ -42,10 +70,6 @@ const databaseServerLogPath = (
 		__dirname,
 		"database/local/.database.log"
 	)
-)
-
-const databaseNamespace = (
-	"tic-tac-toe"
 );
 
 const databaseDirectoryPath = (
@@ -53,6 +77,14 @@ const databaseDirectoryPath = (
 	.resolve(
 		__dirname,
 		"database/local"
+	)
+);
+
+const serverPublicStaticDirectoryPath = (
+	path
+	.resolve(
+		__dirname,
+		"public"
 	)
 );
 
@@ -67,54 +99,261 @@ const server = (
 				/*;
 					@note:
 						Start MongoDB server instance.
+
+						This will ensure that we will only start the same database server.
+						Existing database server not previously terminated will be terminated.
 					@end-note
 				*/
 				process
 				.nextTick(
-					function( ){
-						childProcess
-						.exec(
-							(
-								[
-									"mongod",
-									`--fork`,
-									`--logpath ${ databaseServerLogPath }`,
-									`--port ${ databaseServerPortNumber }`,
-									`--dbpath ${ databaseDirectoryPath }`
-								]
-								.join(
-									" "
-								)
-							),
+					async	function( ){
+								const osType = (
+									os
+									.type( )
+								);
 
-							function( error, stdout, stderr ){
 								if(
 										(
-														error
-											instanceof	Error
+												osType
+											!==	"Linux"
 										)
-									===	true
+									&&	(
+												osType
+											!==	"Darwin"
+										)
 								){
 									console
-									.error(
-										"cannot start database server",
+									.log(
+										"cannot start database server forked process",
+										"operating system not supported",
 
-										`@log-result: ${ stderr }`,
+										"please start independent database server procedure",
+
+										"proceed attempt connect database server",
+
+										`@os-type: ${ osType }`
+									);
+
+									mongoose
+									.connect(
+										databaseServerURI,
+
+										{
+											"useNewUrlParser": true,
+											"useUnifiedTopology": true
+										}
+									)
+
+									mongoose
+									.connection
+									.on(
+										"error",
+										function( ){
+											console
+											.error(
+												"cannot connect database server",
+
+												"proceed server process termination"
+											);
+
+											process
+											.exit(
+												1
+											);
+
+											return;
+										}
+									);
+
+									mongoose
+									.connection
+									.once(
+										"open",
+										function( ){
+											console
+											.log(
+												"connect database server done"
+											);
+										}
+									);
+
+									return;
+								}
+
+								try{
+									const { stdout, stderr } = (
+										await	asyncChildProcessExecute(
+													[
+														"mongo",
+														`--port ${ databaseServerPortNumber }`,
+														`--eval "db.getSiblingDB( 'admin' ).shutdownServer( );"`
+													]
+													.join(
+														" "
+													)
+												)
+									);
+
+									if(
+											(
+													typeof
+													stderr
+												==	"string"
+											)
+
+										&&	(
+													stderr
+													.length
+												>	0
+											)
+									){
+										console
+										.error(
+											"cannot stop non-terminated database server",
+
+											"please start independent stop database server procedure",
+
+											"proceed server process termination",
+
+											`@log-result: ${ stdout }`,
+											`@error-log-result: ${ stderr }`
+										);
+
+										process
+										.exit(
+											1
+										);
+
+										return;
+									}
+									else{
+										console
+										.log(
+											"stop non-terminated database server done",
+
+											`@log-result: ${ stdout }`
+										);
+									}
+
+								}
+								catch( error ){
+									console
+									.error(
+										"cannot stop non-terminated database server",
+
+										"proceed start database server",
 
 										`@error-data: ${ error }`
 									);
 								}
-								else{
+
+								try{
+									const { stdout, stderr } = (
+										await	asyncChildProcessExecute(
+													[
+														"mongod",
+														`--fork`,
+														`--logpath ${ databaseServerLogPath }`,
+														`--port ${ databaseServerPortNumber }`,
+														`--dbpath ${ databaseDirectoryPath }`
+													]
+													.join(
+														" "
+													)
+												)
+									);
+
+									if(
+											(
+													typeof
+													stderr
+												==	"string"
+											)
+
+										&&	(
+													stderr
+													.length
+												>	0
+											)
+									){
+										console
+										.error(
+											"cannot start database server",
+
+											"proceed server process termination",
+
+											`@log-result: ${ stdout }`,
+											`@error-log-result: ${ stderr }`
+										);
+
+										process
+										.exit(
+											1
+										);
+
+										return;
+									}
+									else{
+										console
+										.log(
+											"start database server done",
+
+											`@log-result: ${ stdout }`
+										);
+									}
+								}
+								catch( error ){
 									console
 									.error(
-										"start database server done",
+										"cannot start database server",
 
-										`@log-result: ${ stdout }`
+										"proceed server process termination",
+
+										`@error-data: ${ error }`
 									);
+
+									process
+									.exit(
+										1
+									);
+
+									return;
 								}
+
+								mongoose
+								.connect(
+									databaseServerURI,
+
+									{
+										"useNewUrlParser": true,
+										"useUnifiedTopology": true
+									}
+								)
+
+								mongoose
+								.connection
+								.on(
+									"error",
+									function( ){
+										console
+										.error(
+											"cannot connect database server"
+										);
+									}
+								);
+
+								mongoose
+								.connection
+								.once(
+									"open",
+									function( ){
+										console
+										.log(
+											"connect database server done"
+										);
+									}
+								);
 							}
-						);
-					}
 				);
 
 				const SERVICE = express( );
@@ -194,6 +433,42 @@ const server = (
 					require
 				);
 
+				SERVICE
+				.use(
+					express
+					.static(
+						path
+						.resolve(
+							__dirname,
+							"node_modules/react/umd"
+						)
+					)
+				);
+
+				SERVICE
+				.use(
+					"",
+
+					(
+						express
+						.static(
+							path
+							.resolve(
+								__dirname,
+								"node_modules/react-dom/umd"
+							)
+						)
+					)
+				);
+
+				SERVICE
+				.use(
+					express
+					.static(
+						serverPublicStaticDirectoryPath
+					)
+				);
+
 				/*;
 					@note:
 						Start NodeJS server instance.
@@ -231,48 +506,61 @@ const server = (
 				process
 				.once(
 					"exit",
-					function( ){
-						childProcess
-						.exec(
-							(
-								[
-									"mongo",
-									`--port ${ databasePortNumber }`,
-									`--eval "db.getSiblingDB( 'admin' ).shutdownServer( );"`
-								]
-								.join(
-									" "
-								)
-							),
+					async	function( ){
+								try{
+									const { stdout, stderr } = (
+										await	asyncChildProcessExecute(
+													[
+														"mongo",
+														`--port ${ databaseServerPortNumber }`,
+														`--eval "db.getSiblingDB( 'admin' ).shutdownServer( );"`
+													]
+													.join(
+														" "
+													)
+												)
+									);
 
-							function( error, stdout, stderr ){
-								if(
-										(
-														error
-											instanceof	Error
-										)
-									===	true
-								){
+									if(
+											(
+													typeof
+													stderr
+												==	"string"
+											)
+
+										&&	(
+													stderr
+													.length
+												>	0
+											)
+									){
+										console
+										.error(
+											"cannot stop database server",
+
+											`@log-result: ${ stdout }`,
+											`@error-log-result: ${ stderr }`
+										);
+									}
+									else{
+										console
+										.log(
+											"stop database server done",
+
+											`@log-result: ${ stdout }`
+										);
+									}
+
+								}
+								catch( error ){
 									console
 									.error(
 										"cannot stop database server",
 
-										`@log-result: ${ stderr }`,
-
 										`@error-data: ${ error }`
 									);
 								}
-								else{
-									console
-									.log(
-										"stop database server done",
-
-										`@log-result: ${ stdout }`
-									);
-								}
 							}
-						);
-					}
 				);
 
 				if(

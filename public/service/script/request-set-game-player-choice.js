@@ -1,6 +1,6 @@
 "use strict";
 
-import defaultExport from "proceed-callback.js";
+import defaultExport from "./proceed-callback.js";
 
 const requestSetGamePlayerChoice = (
 	async	function requestSetGamePlayerChoice( option, callback ){
