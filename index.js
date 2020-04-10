@@ -1,11 +1,25 @@
 "use strict";
 
-const server = require( "./server.js" );
+const util = require( "util" );
 
-(
-	async	function( ){
-				return	(
-							await	server( )
-						);
-			}
-)( );
+const startServer = (
+	require( "./start-server.js" )
+);
+
+try{
+	(
+		async	function( ){
+					return	(
+								await	startServer( )
+							);
+				}
+	)( );
+}
+catch( error ){
+	console
+	.error(
+		"cannot start server",
+
+		`@error-data: ${ util.inspect( error ) }`
+	);
+}

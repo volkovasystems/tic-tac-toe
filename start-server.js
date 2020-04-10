@@ -16,6 +16,26 @@ const cookieParser = require( "cookie-parser" );
 const expresSession = require( "express-session" );
 const methodOverride = require( "method-override" );
 
+const proceedCallback = (
+	require( "./utility/proceed-callback.js" )
+);
+
+const applyServerSetting = (
+	require( "./apply-server-setting.js" )
+);
+
+const serveClientModule = (
+	require( "./serve-client-module.js" )
+);
+
+const serveClientView = (
+	require( "./serve-client-view.js" )
+);
+
+const serveClientIndex = (
+	require( "./serve-client-index.js" )
+);
+
 const asyncFs = (
 	fs
 	.promises
@@ -29,65 +49,6 @@ const asyncChildProcessExecute = (
 	)
 );
 
-const proceedCallback = (
-	require( "./utility/proceed-callback.js" )
-);
-
-const platformHostAddress = (
-	"localhost"
-);
-
-const platformPortNumber = (
-	54321
-);
-
-const databaseServerHostAddress = (
-	"localhost"
-);
-
-const databaseServerPortNumber = (
-	4321
-);
-
-const databaseNamespace = (
-	"tic-tac-toe"
-);
-
-const databaseServerURI = (
-	[
-		`mongodb://${ databaseServerHostAddress }`,
-		`:${ databaseServerPortNumber }`,
-		`/${ databaseNamespace }`
-	]
-	.join(
-		""
-	)
-);
-
-const databaseServerLogPath = (
-	path
-	.resolve(
-		__dirname,
-		"database/local/.database.log"
-	)
-);
-
-const databaseDirectoryPath = (
-	path
-	.resolve(
-		__dirname,
-		"database/local"
-	)
-);
-
-const serverPublicStaticDirectoryPath = (
-	path
-	.resolve(
-		__dirname,
-		"public"
-	)
-);
-
 const server = (
 	async	function server( option, callback ){
 				option = (
@@ -95,6 +56,8 @@ const server = (
 
 					||	{ }
 				);
+
+				await	applyServerSetting( option );
 
 				/*;
 					@note:
@@ -136,7 +99,7 @@ const server = (
 
 									mongoose
 									.connect(
-										databaseServerURI,
+										DATABASE_SERVER_URI,
 
 										{
 											"useNewUrlParser": true,
@@ -185,7 +148,7 @@ const server = (
 										await	asyncChildProcessExecute(
 													[
 														"mongo",
-														`--port ${ databaseServerPortNumber }`,
+														`--port ${ DATABASE_SERVER_PORT_NUMBER }`,
 														`--eval "db.getSiblingDB( 'admin' ).shutdownServer( );"`
 													]
 													.join(
@@ -252,10 +215,12 @@ const server = (
 										await	asyncChildProcessExecute(
 													[
 														"mongod",
+
 														`--fork`,
-														`--logpath ${ databaseServerLogPath }`,
-														`--port ${ databaseServerPortNumber }`,
-														`--dbpath ${ databaseDirectoryPath }`
+														`--logpath ${ DATABASE_SERVER_LOG_PATH }`,
+
+														`--port ${ DATABASE_SERVER_PORT_NUMBER }`,
+														`--dbpath ${ DATABASE_DIRECTORY_PATH }`
 													]
 													.join(
 														" "
@@ -322,7 +287,7 @@ const server = (
 
 								mongoose
 								.connect(
-									databaseServerURI,
+									DATABASE_SERVER_URI,
 
 									{
 										"useNewUrlParser": true,
@@ -433,39 +398,16 @@ const server = (
 					require
 				);
 
-				SERVICE
-				.use(
-					express
-					.static(
-						path
-						.resolve(
-							__dirname,
-							"node_modules/react/umd"
-						)
-					)
-				);
+				await	serveClientIndex( option );
 
-				SERVICE
-				.use(
-					"",
-
-					(
-						express
-						.static(
-							path
-							.resolve(
-								__dirname,
-								"node_modules/react-dom/umd"
-							)
-						)
-					)
-				);
+				await	serveClientModule( option );
+				await	serveClientView( option );
 
 				SERVICE
 				.use(
 					express
 					.static(
-						serverPublicStaticDirectoryPath
+						SERVER_PUBLIC_STATIC_DIRECTORY_PATH
 					)
 				);
 
@@ -479,19 +421,17 @@ const server = (
 					function( ){
 						SERVICE
 						.listen(
-							platformPortNumber,
-							platformHostAddress,
+							SERVER_PORT_NUMBER,
+							SERVER_HOST_ADDRESS,
 
 							function( ){
 								console
 								.log(
 									"start server done",
 
-									"server host address:",
-									platformHostAddress,
+									`@server-host-address: ${ SERVER_HOST_ADDRESS }`,
 
-									"server port number:",
-									platformPortNumber
+									`@server-port-number: ${ SERVER_PORT_NUMBER }`
 								);
 							}
 						);
@@ -512,7 +452,7 @@ const server = (
 										await	asyncChildProcessExecute(
 													[
 														"mongo",
-														`--port ${ databaseServerPortNumber }`,
+														`--port ${ DATABASE_SERVER_PORT_NUMBER }`,
 														`--eval "db.getSiblingDB( 'admin' ).shutdownServer( );"`
 													]
 													.join(
@@ -563,19 +503,13 @@ const server = (
 							}
 				);
 
-				if(
-						typeof
-						callback
-					==	"function"
-				){
-					return	(
-								await	proceedCallback(
-											option,
+				return	(
+							await	proceedCallback(
+										option,
 
-											callback
-										)
-							);
-				}
+										callback
+									)
+						);
 			}
 );
 
