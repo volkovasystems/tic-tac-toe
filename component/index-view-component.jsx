@@ -19,6 +19,14 @@ ReactDOM
 						control-component
 					`
 				}
+
+				onClick={
+					function( ){
+							location
+							.href
+						=	"/service/view/game/tic-tac-toe/create";
+					}
+				}
 			>
 				play
 			</button>

@@ -12,6 +12,60 @@ ReactDOM
 			}
 		>
 			<TicTacToeLogoCommponent />
+
+			<button
+				className={
+					`
+						control-component
+					`
+				}
+
+				onClick={
+					function( ){
+							location
+							.href
+						=	"/";
+					}
+				}
+			>
+				home
+			</button>
+
+			<button
+				className={
+					`
+						control-component
+					`
+				}
+
+				onClick={
+					function( ){
+							location
+							.href
+						=	"/service/view/game/tic-tac-toe/start?state=[create-game]";
+					}
+				}
+			>
+				create
+			</button>
+
+			<button
+				className={
+					`
+						control-component
+					`
+				}
+
+				onClick={
+					function( ){
+							location
+							.href
+						=	"/service/view/game/tic-tac-toe/start?state=[connect-game]";
+					}
+				}
+			>
+				connect
+			</button>
 		</div>
 	),
 

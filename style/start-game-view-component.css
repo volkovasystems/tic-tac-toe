@@ -1,4 +1,6 @@
 .start-game-view-component.view-component
 {
-
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
