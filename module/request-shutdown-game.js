@@ -1,7 +1,5 @@
 "use strict";
 
-import defaultExport from "./proceed-callback.js";
-
 const requestShutdownGame = (
 	async	function requestShutdownGame( option, callback ){
 				option = (
@@ -9,6 +7,13 @@ const requestShutdownGame = (
 
 					||	{ }
 				);
+
+				await	fetch(
+							"/service/interface/game/tic-tac-toe/shutdown",
+							{
+								"method": "PUT"
+							}
+						);
 
 				if(
 						typeof
@@ -25,5 +30,3 @@ const requestShutdownGame = (
 				}
 			}
 );
-
-export default requestShutdownGame;

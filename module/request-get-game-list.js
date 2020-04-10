@@ -1,7 +1,5 @@
 "use strict";
 
-import defaultExport from "./proceed-callback.js";
-
 const requestGetGameList = (
 	async	function requestGetGameList( option, callback ){
 				option = (
@@ -25,5 +23,3 @@ const requestGetGameList = (
 				}
 			}
 );
-
-export default requestGetGameList;

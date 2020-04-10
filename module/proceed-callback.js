@@ -42,5 +42,3 @@ const proceedCallback = (
 						};
 			}
 );
-
-export default proceedCallback;
