@@ -77,6 +77,7 @@ const GameSessionSchema = (
 						"type": String,
 						"enum": [
 							"initialized",
+							"connected",
 							"aborted",
 							"completed",
 							"failed",

@@ -11,48 +11,69 @@
 			type="application/javascript"
 		>
 		</script>
-
 		<script
 			src="/service/module/react-dom/react-dom.production.min.js"
 			type="application/javascript"
 		>
 		</script>
+		<script
+			src="/service/module/babel-standalone/babel.min.js"
+			type="application/javascript"
+		>
+		</script>
+
+		<script
+			src="/service/module/game/tic-tac-toe/proceed-callback.js"
+			type="module"
+		>
+		</script>
+		<script
+			src="/service/module/game/tic-tac-toe/request-get-game-list.js"
+			type="module"
+		>
+		</script>
+		<script
+			src="/service/module/game/tic-tac-toe/request-shutdown-game.js"
+			type="module"
+		>
+		</script>
+
+		<link
+			href="/service/style/game/tic-tac-toe/tic-tac-toe-logo-component.css"
+			type="text/css"
+			rel="stylesheet"
+		>
+		<script
+			src="/service/component/game/tic-tac-toe/tic-tac-toe-logo-component.jsx"
+			type="text/babel"
+		>
+		</script>
+
+		<link
+			href="/service/style/game/tic-tac-toe/index-view-container.css"
+			type="text/css"
+			rel="stylesheet"
+		>
+		<link
+			href="/service/style/game/tic-tac-toe/index-view-component.css"
+			type="text/css"
+			rel="stylesheet"
+		>
+		<script
+			src="/service/component/game/tic-tac-toe/index-view-component.jsx"
+			type="text/babel"
+		>
+		</script>
 	</head>
 	<body>
-		<script
-			src="/service/script/proceed-callback.js"
-			type="module"
+		<section
+			class="
+				index-view-container
+				view-container
+			"
+
+			id="index-view-container"
 		>
-		</script>
-		<script
-			src="/service/script/request-create-game.js"
-			type="module"
-		>
-		</script>
-		<script
-			src="/service/script/request-connect-game.js"
-			type="module"
-		>
-		</script>
-		<script
-			src="/service/script/request-get-game-list.js"
-			type="module"
-		>
-		</script>
-		<script
-			src="/service/script/request-get-game-item.js"
-			type="module"
-		>
-		</script>
-		<script
-			src="/service/script/request-get-game-player.js"
-			type="module"
-		>
-		</script>
-		<script
-			src="/service/script/request-set-game-player-choice.js"
-			type="module"
-		>
-		</script>
+		</section>
 	<body>
 </html>

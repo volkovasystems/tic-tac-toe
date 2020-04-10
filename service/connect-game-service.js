@@ -2,7 +2,7 @@
 
 SERVICE
 .route(
-	"/service/interface/tic-tac-toe/game/connect/:gameSessionReference"
+	"/service/interface/game/tic-tac-toe/connect/:gameSessionReference"
 )
 .post(
 	[
@@ -13,7 +13,7 @@ SERVICE
 				.gameSessionReference
 			);
 
-			
+
 		}
 	]
 );

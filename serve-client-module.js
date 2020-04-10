@@ -49,6 +49,38 @@ const serveClientModule = (
 					)
 				);
 
+				SERVICE
+				.use(
+					"/service/module/babel-standalone",
+
+					(
+						express
+						.static(
+							path
+							.resolve(
+								__dirname,
+								"node_modules/@babel/standalone"
+							)
+						)
+					)
+				);
+
+				SERVICE
+				.use(
+					"/service/module/game/tic-tac-toe",
+
+					(
+						express
+						.static(
+							path
+							.resolve(
+								__dirname,
+								"module"
+							)
+						)
+					)
+				);
+
 				return	(
 							await	proceedCallback(
 										option,

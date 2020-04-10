@@ -2,7 +2,7 @@
 
 SERVICE
 .route(
-	"/service/interface/tic-tac-toe/game/list"
+	"/service/interface/game/tic-tac-toe/list"
 )
 .get(
 	[

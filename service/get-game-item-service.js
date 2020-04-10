@@ -2,7 +2,7 @@
 
 SERVICE
 .route(
-	"/service/interface/tic-tac-toe/game/:gameSessionReference"
+	"/service/interface/game/tic-tac-toe/:gameSessionReference"
 )
 .get(
 	[

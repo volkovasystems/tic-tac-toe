@@ -23,7 +23,7 @@ const serveClientView = (
 					path
 					.resolve(
 						__dirname,
-						"public/service/view/game/tic-tac-toe"
+						"view"
 					)
 				);
 

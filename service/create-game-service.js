@@ -2,7 +2,7 @@
 
 SERVICE
 .route(
-	"/service/interface/tic-tac-toe/game/create"
+	"/service/interface/game/tic-tac-toe/create"
 )
 .post(
 	[

@@ -2,12 +2,12 @@
 
 SERVICE
 .route(
-	"/service/interface/tic-tac-toe/game/:gameSessionReference/player/:playerPiece/set/choice/:playerChoiceIndex"
+	"/service/interface/game/tic-tac-toe/:gameSessionReference/player/:playerPiece/set/choice/:playerChoiceIndex"
 )
 .put(
 	[
 		function executeRequestSetGamePlayerChoice( request, response ){
-			
+
 		}
 	]
 );
