@@ -19,6 +19,22 @@ const serveClientStyle = (
 
 				SERVICE
 				.use(
+					"/service/style/reset-css",
+
+					(
+						express
+						.static(
+							path
+							.resolve(
+								__dirname,
+								"node_modules/reset-css"
+							)
+						)
+					)
+				);
+
+				SERVICE
+				.use(
 					"/service/style/game/tic-tac-toe",
 
 					(

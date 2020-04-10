@@ -11,6 +11,7 @@ ReactDOM
 				`
 			}
 		>
+			<TicTacToeLogoCommponent />
 		</div>
 	),
 

@@ -12,6 +12,26 @@ ReactDOM
 			}
 		>
 			<TicTacToeLogoCommponent />
+
+			<button
+				className={
+					`
+						control-component
+					`
+				}
+			>
+				play
+			</button>
+
+			<button
+				className={
+					`
+						control-component
+					`
+				}
+			>
+				shutdown
+			</button>
 		</div>
 	),
 

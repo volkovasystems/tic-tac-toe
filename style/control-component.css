@@ -1,0 +1,24 @@
+button.control-component
+{
+	padding: 5px;
+	margin: 5px;
+
+	border-width: 2px;
+	border-style: solid;
+	border-color: rgba( 0, 0, 0, 0.1 );
+
+	font-family: monospace;
+	font-size: 15px;
+
+	letter-spacing: 1px;
+
+	background-color: transparent;
+
+	cursor: pointer;
+}
+
+button.control-component:hover
+{
+	color: rgba( 255, 255, 255, 1.0 );
+	background-color: rgba( 0, 0, 0, 1.0 );
+}
